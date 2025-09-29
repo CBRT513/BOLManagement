@@ -30,6 +30,26 @@ logger = logging.getLogger(__name__)
 class MainMenuView(TemplateView):
     """Main menu view that matches your existing SPA menu"""
     template_name = 'inventory/main_menu.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_main_menu'] = True
+        
+        # Add basic stats (with error handling)
+        try:
+            context['total_batches'] = Batch.objects.count()
+            context['active_batches'] = Batch.objects.filter(status='ACTIVE').count()
+            context['total_items'] = Item.objects.filter(is_active=True).count()
+            context['total_suppliers'] = Supplier.objects.filter(is_active=True).count()
+        except Exception as e:
+            # If database isn't ready, provide default values
+            logger.warning(f"Database not ready for stats: {e}")
+            context['total_batches'] = 0
+            context['active_batches'] = 0
+            context['total_items'] = 0
+            context['total_suppliers'] = 0
+            
+        return context
 
 
 # ==== ITEM VIEWS ====
