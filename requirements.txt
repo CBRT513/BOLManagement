@@ -1,38 +1,38 @@
 # Django and core dependencies
-Django==4.2.7
+Django==4.2.16
 python-decouple==3.8
 
 # Database
 dj-database-url==2.1.0
-psycopg2-binary==2.9.7
+psycopg2-binary==2.9.9
 
 # Static files and production
-whitenoise==6.6.0
-gunicorn==21.2.0
+whitenoise==6.8.2
+gunicorn==23.0.0
 
 # Forms and utilities
-django-crispy-forms==2.1
-crispy-bootstrap5==0.7
+django-crispy-forms==2.3
+crispy-bootstrap5==2024.10
 
 # API and JSON handling
-djangorestframework==3.14.0
+djangorestframework==3.15.2
 
 # Development and debugging (optional)
 django-extensions==3.2.3
-python-dotenv==1.0.0
+python-dotenv==1.0.1
 
 # Security and CORS
-django-cors-headers==4.3.1
+django-cors-headers==4.4.0
 
 # Date and time utilities
-python-dateutil==2.8.2
+python-dateutil==2.9.0
 
 # Excel/CSV export capabilities (for reports)
-openpyxl==3.1.2
-pandas==2.0.3
+openpyxl==3.1.5
+pandas==2.2.3
 
 # Logging and monitoring
-django-debug-toolbar==4.2.0
+django-debug-toolbar==4.4.6
 
-# Image processing (if needed for future enhancements)
-Pillow==10.0.1
+# Image processing (compatible with Python 3.13)
+Pillow==11.0.0
