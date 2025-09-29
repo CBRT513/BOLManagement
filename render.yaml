@@ -7,7 +7,7 @@ databases:
 services:
   - type: web
     name: bol-management
-    runtime: python3
+    runtime: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn bol_management.wsgi:application"
     plan: starter
