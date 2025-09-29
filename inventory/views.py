@@ -14,6 +14,7 @@ from django.db.models import Q, Sum, Count
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
+from django.utils import timezone
 
 from .models import (
     Item, Size, Supplier, Customer, Carrier, Truck,
