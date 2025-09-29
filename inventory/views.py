@@ -644,3 +644,42 @@ class ReportsView(TemplateView):
         ).order_by('-created_at')[:10]
         
         return context
+
+
+def health_check(request):
+    """Simple health check to diagnose database issues"""
+    from django.http import JsonResponse
+    from django.db import connection
+    import traceback
+    
+    health_data = {
+        'status': 'ok',
+        'timestamp': timezone.now().isoformat(),
+        'checks': {}
+    }
+    
+    # Database connection check
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            health_data['checks']['database_connection'] = 'ok'
+    except Exception as e:
+        health_data['status'] = 'error'
+        health_data['checks']['database_connection'] = f'error: {str(e)}'
+    
+    # Check if tables exist
+    try:
+        # Try a simple count query on each model
+        health_data['checks']['tables'] = {
+            'items': Item.objects.count(),
+            'sizes': Size.objects.count(),
+            'suppliers': Supplier.objects.count(),
+            'customers': Customer.objects.count(),
+            'carriers': Carrier.objects.count(),
+        }
+    except Exception as e:
+        health_data['status'] = 'error'
+        health_data['checks']['tables'] = f'error: {str(e)}'
+        health_data['traceback'] = traceback.format_exc()
+    
+    return JsonResponse(health_data, status=200 if health_data['status'] == 'ok' else 500)
