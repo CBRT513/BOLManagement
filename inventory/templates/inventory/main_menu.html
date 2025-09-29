@@ -1,0 +1,117 @@
+{% extends "inventory/base.html" %}
+{% load static %}
+
+{% block title %}BOL Management - Main Menu{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h2 class="text-primary">Cincinnati Barge & Rail Terminal, LLC</h2>
+    <p class="text-muted fs-5">BOL Management System</p>
+</div>
+
+<div class="menu-card">
+    <h4>📦 Master Data Entry</h4>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:item_list' %}" class="btn btn-menu w-100">
+                📦 Items Management
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:size_list' %}" class="btn btn-menu w-100">
+                📏 Sizes Management
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:supplier_list' %}" class="btn btn-menu w-100">
+                🏭 Suppliers
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:customer_list' %}" class="btn btn-menu w-100">
+                🏢 Customers
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:carrier_list' %}" class="btn btn-menu w-100">
+                🚛 Carriers
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:truck_list' %}" class="btn btn-menu w-100">
+                🚚 Trucks
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:location_list' %}" class="btn btn-menu w-100">
+                📍 Locations
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="menu-card">
+    <h4>📋 Operations</h4>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:batch_list' %}" class="btn btn-menu w-100">
+                📋 Batch Entry
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'inventory:reports' %}" class="btn btn-menu w-100">
+                📊 Reports & BOL
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="menu-card">
+    <h4>📈 Quick Stats</h4>
+    <div class="row text-center">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ total_batches|default:"0" }}</h5>
+                    <p class="card-text small">Total Batches</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-success">{{ active_batches|default:"0" }}</h5>
+                    <p class="card-text small">Active Batches</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-info">{{ total_items|default:"0" }}</h5>
+                    <p class="card-text small">Items</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">{{ total_suppliers|default:"0" }}</h5>
+                    <p class="card-text small">Suppliers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Load stats via AJAX
+$(document).ready(function() {
+    // This could be enhanced to load real-time stats
+    console.log('BOL Management System loaded');
+});
+</script>
+{% endblock %}

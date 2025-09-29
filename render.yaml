@@ -1,0 +1,28 @@
+databases:
+  - name: bol-management-db
+    databaseName: bol_management
+    user: bol_user
+    region: oregon
+
+services:
+  - type: web
+    name: bol-management
+    runtime: python3
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn bol_management.wsgi:application"
+    plan: starter
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bol-management-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: DJANGO_SETTINGS_MODULE
+        value: bol_management.settings
