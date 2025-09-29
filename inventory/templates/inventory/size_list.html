@@ -1,0 +1,150 @@
+{% extends "inventory/base.html" %}
+{% load static %}
+
+{% block title %}Sizes Management - BOL Management{% endblock %}
+{% block page_title %}📏 Sizes Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>📏 Sizes Management</h3>
+    <a href="{% url 'inventory:size_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus"></i> Add New Size
+    </a>
+</div>
+
+<!-- Form Card for Adding/Editing -->
+<div class="form-card" id="size-form-card" style="display: none;">
+    <h5>Add New Size</h5>
+    <form id="sizeForm" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-10">
+            <label class="form-label fw-bold">Size Label *</label>
+            <input type="text" class="form-control" id="sizeLabel" name="sizeLabel" placeholder="e.g., -16, 3x6, 6x16" required>
+            <div class="form-text">Common sizes: -16, 3x6, 6x16, -8, etc.</div>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <button type="submit" class="btn btn-success w-100" id="submitBtn">Add</button>
+        </div>
+        <input type="hidden" id="editMode" value="false">
+        <input type="hidden" id="editSizeId" value="">
+    </form>
+</div>
+
+<!-- Toggle Form Button -->
+<div class="mb-3">
+    <button type="button" class="btn btn-outline-primary" onclick="toggleForm()">
+        <span id="toggleText">Show Add Form</span>
+    </button>
+</div>
+
+<!-- Sizes List -->
+<div id="sizes-list">
+    {% if sizes %}
+    <h5 class="mb-3">Existing Sizes ({{ sizes|length }})</h5>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Size Label</th>
+                    <th>Active</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for size in sizes %}
+                <tr>
+                    <td><strong>{{ size.size_label }}</strong></td>
+                    <td>
+                        {% if size.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ size.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <a href="{% url 'inventory:size_delete' size.id %}" class="btn btn-sm btn-outline-danger btn-delete">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No sizes found. Add your first size above.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let formVisible = false;
+
+function toggleForm() {
+    const formCard = document.getElementById('size-form-card');
+    const toggleText = document.getElementById('toggleText');
+    
+    if (formVisible) {
+        formCard.style.display = 'none';
+        toggleText.textContent = 'Show Add Form';
+        formVisible = false;
+        resetForm();
+    } else {
+        formCard.style.display = 'block';
+        toggleText.textContent = 'Hide Form';
+        formVisible = true;
+    }
+}
+
+function resetForm() {
+    document.getElementById('sizeForm').reset();
+    document.getElementById('editMode').value = 'false';
+    document.getElementById('editSizeId').value = '';
+    document.getElementById('submitBtn').textContent = 'Add';
+    document.getElementById('submitBtn').className = 'btn btn-success w-100';
+}
+
+// Form submission
+document.getElementById('sizeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        sizeLabel: document.getElementById('sizeLabel').value.trim(),
+        editMode: document.getElementById('editMode').value === 'true',
+        sizeId: document.getElementById('editSizeId').value
+    };
+    
+    if (!formData.sizeLabel) {
+        alert('Please enter a size label');
+        return;
+    }
+    
+    const url = '{% url "inventory:api_sizes" %}';
+    const method = formData.editMode ? 'PUT' : 'POST';
+    
+    $.ajax({
+        url: url,
+        method: method,
+        data: JSON.stringify({
+            sizeLabel: formData.sizeLabel,
+            ...(formData.editMode && { sizeId: formData.sizeId })
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+            if (response.success) {
+                location.reload(); // Refresh the page to show changes
+            } else {
+                alert('Error: ' + response.message);
+            }
+        },
+        error: function() {
+            alert('Error saving size');
+        }
+    });
+});
+</script>
+{% endblock %}

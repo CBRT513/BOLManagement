@@ -1,0 +1,51 @@
+{% extends "inventory/base.html" %}
+{% load static %}
+
+{% block title %}Size Form - BOL Management{% endblock %}
+{% block page_title %}📏 Size Form{% endblock %}
+
+{% block content %}
+<h3>{% if form.instance.pk %}Edit Size{% else %}Add New Size{% endif %}</h3>
+
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="{{ form.size_label.id_for_label }}" class="form-label fw-bold">Size Label *</label>
+                {{ form.size_label }}
+                {% if form.size_label.help_text %}
+                    <div class="form-text">{{ form.size_label.help_text }}</div>
+                {% endif %}
+                {% if form.size_label.errors %}
+                    <div class="text-danger">
+                        {% for error in form.size_label.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="{{ form.is_active.id_for_label }}" class="form-label fw-bold">Active</label>
+                {{ form.is_active }}
+                {% if form.is_active.errors %}
+                    <div class="text-danger">
+                        {% for error in form.is_active.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}Update Size{% else %}Add Size{% endif %}
+        </button>
+        <a href="{% url 'inventory:size_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+</form>
+{% endblock %}
